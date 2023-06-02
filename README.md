@@ -14,11 +14,13 @@ In order to run the code, you will need the following:
 
 # Structure
 ## A nonlinear deconvolution problem
-1. 
+1. simulate data: 
+2. train: LPD `toy_train_lpd.py`; LPGD `toy_train_lpgd.py`
 
 
 
 
 ##  Electrical impedance tomography
-
+1. simulate data: `eit_circle_simulation.py`
+2. train: LPD `eit_train_lpd.py`; LPGD `eit_train_lpgd.py`
 
