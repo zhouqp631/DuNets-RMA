@@ -14,7 +14,7 @@ In order to run the code, you will need the following:
 
 # Structure
 ## A nonlinear deconvolution problem
-1. simulate data: 
+1. simulate data: `toy_dataset_simulation.py`
 2. train: LPD `toy_train_lpd.py`; LPGD `toy_train_lpgd.py`
 
 
