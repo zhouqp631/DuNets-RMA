@@ -1,13 +1,4 @@
-"""
-2022年4月17日  能跑通，很费时间 80s/每个batch  (batch_size=2)
-2022年4月17日  修改为pytorch_lightning
-2022年5月8日   多个方法综合在一起：主要修改primaldual.py
-              实现了 ['baseline', 'parallel','momentum_lr', 'ewma_sum', 'momentum', 'rnn']
-2022年5月29日  修改训练数据，fig debug in eit_circle_simulation.py
-2022年5月30日  rnn模型修改：lstm输出用output，不用hidden state；加了GRUnet
-2022年6月25日  修改，增加复现设置：pl.seed_everything(seed)
-"""
-#%
+
 import argparse
 import glob
 import os
