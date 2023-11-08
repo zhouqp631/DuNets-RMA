@@ -1,6 +1,3 @@
-"""
-2022年6月20日 generate sample from TV prior
-"""
 import os
 import numpy as np
 import matplotlib
