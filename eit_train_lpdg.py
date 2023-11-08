@@ -1,12 +1,3 @@
-"""
-2022年5月8日   多个方法综合在一起：主要修改primaldual.py
-              实现了 ['baseline', 'parallel','momentum_lr', 'ewma_sum', 'momentum', 'rnn']
-2022年5月26日 实现learned proximal gradient descent
-Mardani M, Sun Q, Donoho D, et al. Neural proximal gradient descent for compressive imaging[J].
-Advances in Neural Information Processing Systems, 2018, 31**.** (cite94)
-2022年6月6日   修改了RNN模型，具体见eit_train_lpd.py
-"""
-#%
 import argparse
 import glob
 import os
