@@ -1,10 +1,3 @@
-"""
-2022年4月15日 只保存三角元数据
-2022年4月18日 【important】服务器生成样本, window本地用， 有点问题：
-              虽然seed一样，但是网格mesh_obj不一样.
-              所以就本地生成数据+一起训练，或者服务器生成数据+一起训练。
-              生成数据很快
-"""
 import os
 os.environ["OMP_NUM_THREADS"] = "1"             # export OMP_NUM_THREADS=1
 os.environ["OPENBLAS_NUM_THREADS"] = "1"        # export OPENBLAS_NUM_THREADS=1
