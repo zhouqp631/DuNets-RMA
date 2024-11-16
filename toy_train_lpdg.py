@@ -29,9 +29,9 @@ import numpy as np
 
 from toy_proximalgradient import LearnedProximal
 
-# device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
 device = torch.device('cpu')
-# %%
+
 class EITdataset(Dataset):
     """
     return x-perm, y-电压
@@ -148,7 +148,7 @@ def forward_and_jac(xs,args):
         jacs[ind,:,:] = grads
     return Kf.detach().to(device), jacs.detach().to(device)
 
-# %
+
 class LearnedPGD(pl.LightningModule):
     def __init__(self, shape_primal, grad_type, hypers):
         super().__init__()
@@ -220,18 +220,18 @@ if __name__ == '__main__':
     args = parser.parse_args()
     print(args)
     pl.seed_everything(args.n_test)
-    #
+
     data_type = f'a{args.a:.1f}'
     data_dir = os.path.join('datasets-toy-nonlinear', data_type)
     print(data_dir)
-    #
+
     time.sleep(np.random.rand() * 3)
     hypers = np.load(os.path.join(data_dir, 'hypers.npz'))
     hypers = dict(hypers)
     hypers['layer_rnn'] = args.layer
     hypers['hidden_rnn'] = args.hidden
     hypers['share_weight'] = args.share_weight
-    #
+
     data_file_list = [os.path.join(data_dir, f'{i}.npz') for i in range(22)]
     train_data_file_list = data_file_list
     val_data_file_list = data_file_list[-2:]
@@ -243,7 +243,7 @@ if __name__ == '__main__':
     method = f'gt_{grad_type}_test_{args.n_test}_l_{args.layer}_hidden_{args.hidden}'  # xxx
     experiments = 'exp-toy-lposw' if args.share_weight else 'exp-toy-lpo'
     log_dir = os.path.join(*['exp-toy', data_type, f'train_ratio{args.train_ratio:.1f}', experiments, method])
-    #
+
     checkpoint_callback = ModelCheckpoint(save_top_k=1, verbose=True,monitor='val_loss', mode='min', save_last=True)
     lr_monitor = LearningRateMonitor(logging_interval=None)
     tb_logger = pl_loggers.TensorBoardLogger(log_dir)
@@ -260,7 +260,7 @@ if __name__ == '__main__':
                 , 'enable_progress_bar': True
                 }
     pprint(trainer_args)
-    #
+
     shape_primal = int(hypers['x_dim'])
     model = LearnedPGD(shape_primal, grad_type, hypers)
     trainer = pl.Trainer(max_epochs=args.n_epoch, **trainer_args)
