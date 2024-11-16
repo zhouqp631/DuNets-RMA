@@ -1,7 +1,5 @@
 # DuNets-RMA 
-Code for the research paper "Deep Unrolling Networks with Recurrent Momentum Acceleration for Nonlinear Inverse Problems".
-
-A pre-print is available at [arXiv](), for now please cite as:
+Code for the paper [Deep Unrolling Networks with Recurrent Momentum Acceleration for Nonlinear Inverse Problems](https://iopscience.iop.org/article/10.1088/1361-6420/ad35e3).
 
 
 #  Requirements
@@ -16,7 +14,6 @@ In order to run the code, you will need the following:
 ## A nonlinear deconvolution problem
 1. simulate data: `toy_dataset_simulation.py`
 2. train: LPD `toy_train_lpd.py`; LPGD `toy_train_lpgd.py`
-
 
 
 
