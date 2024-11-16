@@ -8,7 +8,7 @@ import platform
 import torch
 import tqdm
 import argparse
-#%%
+
 def nonlinear_convolution(W1,W2,size,steps,x,args):
     """
        y = a*x^T W1 x +W2 x
@@ -30,15 +30,15 @@ def nonlinear_convolution(W1,W2,size,steps,x,args):
         y[i] = y_temp
     return y
 
-#%%
+
 def main(W1,W2,size,steps,args,ind):
     a = args.a
     n = args.dim_x
     m = len(steps)
     num = args.num
 
-    np.random.seed(ind)              # 每个文件样本设置随机数种子
-    time.sleep(np.random.rand()*3)   # 随机停几秒避免同时检查文件是否存在
+    np.random.seed(ind)              
+    time.sleep(np.random.rand()*3)   
 
     save_file_num = str(ind)
     data_type = f'a{a:.1f}'
@@ -51,7 +51,7 @@ def main(W1,W2,size,steps,args,ind):
         np.savez(hyper_file,
                  W1=W1,W2=W2,size=size,steps=steps,
                  y_dim=m,x_dim=n,n_samples=num,a=a)
-    #%% tv prior: https://stats.stackexchange.com/questions/457708/how-to-sample-a-total-variation-prior
+
     scale = 0.5
     xs = np.zeros((n,num))
     cnt = 0
@@ -66,24 +66,14 @@ def main(W1,W2,size,steps,args,ind):
             temp = temp*2-1
             xs[:,cnt] = temp
             cnt += 1
-    # plt.step(range(n),xs[:, :6]), plt.show()
-    # xs = np.random.randn(n,num).round(2)
-    #%%
+ 
     ys = np.zeros((m, num))
     for i in range(num):
         y = nonlinear_convolution(W1,W2,size,steps,xs[:,i],args)
         # y = y+np.max(y)*0.02*np.random.randn(m)
         ys[:,i] = y
 
-    # plt.step(range(m),ys[:, :6]), plt.show()
-    #%% 在primal-dual算法中给定x的初始值：x+noise
-    xs,ys = xs.T,ys.T
-    xs_inv = np.zeros_like(xs)
-    # for i,(x,y) in enumerate(zip(xs,ys)):
-    #     x_inv = x+np.random.randn(n)*(np.max(x)*0.5)
-    #     x_inv[x_inv<0] = 1e-3
-    #     xs_inv.append(x_inv)、
-    #%%
+
     data_file = os.path.join(save_path,save_file_num+'.npz')
     np.savez(data_file,xs=np.array(xs),xs_inv=np.array(xs_inv),ys=np.array(ys))
     print(f'save data in {data_file}')
