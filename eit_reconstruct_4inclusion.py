@@ -21,7 +21,6 @@ from pytorch_lightning import loggers as pl_loggers
 
 from pprint import pprint
 from proximalgradient import LearnedProximal
-# device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 device = torch.device('cpu')
 from a_utils import compute_metrics, plot_preds, forward_and_jac, EITDataModule, TVLoss, get_neighbor, read_hypers
 
@@ -161,24 +160,23 @@ class LearnedPOEIT(pl.LightningModule):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='lpo')
-    parser.add_argument('--n_inclusion', type=int, default=4, help='number of inclusion')        #xxx 场景参数
-    parser.add_argument('--h0', type=float, default=0.07, help='initial mesh size')              # 场景参数
+    parser.add_argument('--n_inclusion', type=int, default=4, help='number of inclusion')
+    parser.add_argument('--h0', type=float, default=0.07, help='initial mesh size')
 
-    parser.add_argument('--share_weight', type=int, default=0, help='1-share weight; 0-not share weight')       # 寻优参数 【parser用bool有点麻烦】https://stackoverflow.com/questions/15008758/parsing-boolean-values-with-argparse
-    parser.add_argument('--n_train', type=int, default=50, help='the number of training data')   #xxx 实验参数
-    parser.add_argument('--n_epoch', type=int, default=20, help='the number of epoches')         # 实验参数
-    parser.add_argument('--n_test', type=int, default=0, help='number of test')                  # 实验参数
+    parser.add_argument('--share_weight', type=int, default=0, help='1-share weight; 0-not share weight')
+    parser.add_argument('--n_train', type=int, default=50, help='the number of training data')
+    parser.add_argument('--n_epoch', type=int, default=20, help='the number of epoches')
+    parser.add_argument('--n_test', type=int, default=0, help='number of test')
 
-    parser.add_argument('--layer', type=int, default=1, help='the number of layers in RNN')      #xxx 寻优参数
-    parser.add_argument('--reg', type=float, default=0.0, help='reg of tv loss')                 # 寻优参数
-    parser.add_argument('--idx_grad', type=int, default=3, help='index of grad_type')            # 寻优参数
+    parser.add_argument('--layer', type=int, default=1, help='the number of layers in RNN')
+    parser.add_argument('--reg', type=float, default=0.0, help='reg of tv loss')
+    parser.add_argument('--idx_grad', type=int, default=3, help='index of grad_type')
     args = parser.parse_args()
     pl.seed_everything(args.n_test)
     print(args)
 
     num_inclusion = args.n_inclusion
     h0 = args.h0
-    # data_type = f'circle{num_inclusion}_h0{h0}_{platform.system()}'
     data_type = f'circle{num_inclusion}_h0{h0}_Linux'
     data_dir = os.path.join('datasets-600',data_type)  #xxx
 
@@ -235,7 +233,7 @@ if __name__ == '__main__':
                      ,'num_sanity_val_steps': 0
                      ,'benchmark': False
                      ,'fast_dev_run': False
-                     ,'limit_train_batches': limit_train_batches  #训练数据集的使用比例，用来测试和debug。
+                     ,'limit_train_batches': limit_train_batches
                      ,'limit_val_batches': limit_val_batches
                      ,'gradient_clip_val': 1.0
                      ,'logger': tb_logger
@@ -243,7 +241,7 @@ if __name__ == '__main__':
                      ,'enable_progress_bar': False
                      }
     pprint(trainer_args)
-    #%
+
     shape_primal, shape_dual = 686, 208
 
     model = LearnedPOEIT(shape_primal,grad_type,hypers_eit,hypers_model)
@@ -251,10 +249,3 @@ if __name__ == '__main__':
 
     trainer = pl.Trainer(max_epochs=args.n_epoch, **trainer_args)
     trainer.fit(model, datamodule=dataset,ckpt_path=chkp_path)
-
-
-
-
-
-
-
