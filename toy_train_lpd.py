@@ -29,9 +29,9 @@ import numpy as np
 
 from toy_primaldual import LearnedPrimalDual
 
-# device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
 device = torch.device('cpu')
-# %%
+
 class EITdataset(Dataset):
     """
     return x-perm, y-电压
@@ -149,7 +149,7 @@ def forward_and_jac(xs,args):
         jacs[ind,:,:] = grads
     return Kf.detach().to(device), jacs.detach().to(device)
 
-# %
+
 class LearnedPD(pl.LightningModule):
     def __init__(self, shape_primal, shape_dual, grad_type, hypers):
         super().__init__()
@@ -219,28 +219,28 @@ class LearnedPD(pl.LightningModule):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='lpd')
-    parser.add_argument('--n_epoch', type=int, default=20, help='the number of epoches')  # xxx 实验参数
-    parser.add_argument('--batchsize', type=int, default=32, help='train batch size')  # xxx 实验参数
+    parser.add_argument('--n_epoch', type=int, default=20, help='the number of epoches') 
+    parser.add_argument('--batchsize', type=int, default=32, help='train batch size')  
     parser.add_argument('--a', type=float, default=1.0, help='power of x')
     parser.add_argument('--train_ratio', type=float, default=25, help='limit_train_batches')
-    parser.add_argument('--idx_grad', type=int, default=0, help='index of grad_type')  # xxx 寻优参数
-    parser.add_argument('--layer', type=int, default=2, help='the number of layers in RNN')  # xxx 寻优参数
-    parser.add_argument('--hidden', type=int, default=50, help='the number of hidden cells in RNN')  # xxx 寻优参数
-    parser.add_argument('--n_test', type=int, default=0, help='number of test')  # xxx 实验参数
+    parser.add_argument('--idx_grad', type=int, default=0, help='index of grad_type')  
+    parser.add_argument('--layer', type=int, default=2, help='the number of layers in RNN')  
+    parser.add_argument('--hidden', type=int, default=50, help='the number of hidden cells in RNN')  
+    parser.add_argument('--n_test', type=int, default=0, help='number of test') 
     args = parser.parse_args()
     print(args)
     pl.seed_everything(args.n_test)
-    #
+   
     data_type = f'a{args.a:.1f}'
     data_dir = os.path.join('datasets-toy-nonlinear', data_type)
     print(data_dir)
-    #
+
     time.sleep(np.random.rand() * 3)
     hypers = np.load(os.path.join(data_dir, 'hypers.npz'))
     hypers = dict(hypers)
     hypers['layer_rnn'] = args.layer
     hypers['hidden_rnn'] = args.hidden
-    #
+ 
     data_file_list = [os.path.join(data_dir, f'{i}.npz') for i in range(22)]
     train_data_file_list = data_file_list
     val_data_file_list = data_file_list[-2:]
@@ -251,12 +251,12 @@ if __name__ == '__main__':
     grad_type = ['baseline', 'momentum', 'lstm', 'gru'][args.idx_grad]
     method = f'gt_{grad_type}_test_{args.n_test}_l_{args.layer}_hidden_{args.hidden}'  # xxx
     log_dir = os.path.join(*['exp-toy', data_type, f'train_ratio{args.train_ratio:.1f}','exp-toy-lpd',method])
-    #
+   
     checkpoint_callback = ModelCheckpoint(save_top_k=1, verbose=True,monitor='val_loss', mode='min', save_last=True)
     lr_monitor = LearningRateMonitor(logging_interval=None)
     tb_logger = pl_loggers.TensorBoardLogger(log_dir)
     trainer_args = {'default_root_dir': log_dir
-        # , 'gpus': [0]
+        , 'gpus': [0]
         , 'callbacks': [lr_monitor, checkpoint_callback]
         , 'num_sanity_val_steps': 0
         , 'benchmark': False
@@ -269,7 +269,7 @@ if __name__ == '__main__':
         , 'enable_progress_bar': True
         }
     pprint(trainer_args)
-    #
+
     shape_primal, shape_dual = int(hypers['x_dim']), int(hypers['y_dim'])
     model = LearnedPD(shape_primal, shape_dual, grad_type, hypers)
     print('-' * 50)
