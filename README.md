@@ -7,6 +7,7 @@ In order to run the code, you will need the following:
 - `PyTorch` (>= 1.10.0)
 - `Python` (>=3.7.xx)
 - `PyEIT` ([link](https://github.com/eitcom/pyEIT))
+- `pytorch_lightning`
 
 
 
